@@ -12,77 +12,123 @@
   <img src="https://assets.trpc.io/www/v10/v10-dark-landscape.gif" alt="Demo" />
 </p>
 
-# `@trpc/svelte-query`
+# `@jgchk/trpc-svelte-query`
 
 > A tRPC wrapper around svelte-query.
 
 ## Documentation
 
-Full documentation for `@trpc/svelte-query` can be found [here](https://trpc.io/docs/svelte-query)
+Full documentation for `@jgchk/trpc-svelte-query` can be found [here](https://trpc.io/docs/svelte-query)
 
 ## Installation
 
 ```bash
 # npm
-npm install @trpc/svelte-query @tanstack/svelte-query
+npm install @jgchk/trpc-svelte-query @tanstack/svelte-query
 
 # Yarn
-yarn add @trpc/svelte-query @tanstack/svelte-query
+yarn add @jgchk/trpc-svelte-query @tanstack/svelte-query
 
 # pnpm
-pnpm add @trpc/svelte-query @tanstack/svelte-query
+pnpm add @jgchk/trpc-svelte-query @tanstack/svelte-query
 ```
 
 ## Basic Example
 
-Create a utils file that exports tRPC hooks and providers.
+Set up tRPC in `lib/trpc.ts`
 
 ```ts
-import { createTRPCSvelte } from '@trpc/svelte-query';
-import type { AppRouter } from './server';
+import { createTRPCSvelte } from '@trpc/svelte-query'
+import type { AppRouter } from '../server/routers/_app'
 
-export const trpc = createTRPCSvelte<AppRouter>();
+export const { createClient, setContextClient, getContextClient } = createTRPCSvelte<AppRouter>()
 ```
 
-Use the provider to connect to your API.
+Set up a tRPC client in `routes/layout.ts`
 
 ```ts
-import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
-import { trpc } from '~/utils/trpc';
+import { browser, dev } from '$app/environment'
+import { QueryClient } from '@tanstack/svelte-query'
+import { httpBatchLink, loggerLink } from '@trpc/client'
+import { createClient } from '$lib/trpc'
+import type { LayoutLoad } from './$types'
 
-export function App() {
-  const [queryClient] = useState(() => new QueryClient());
-  const [trpcClient] = useState(() =>
-    trpc.createClient({
-      url: 'http://localhost:5000/trpc',
-    }),
-  );
-  return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>
-        {/* Your app here */}
-      </QueryClientProvider>
-    </trpc.Provider>
-  );
+export const load: LayoutLoad = async ({ fetch }) => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        enabled: browser,
+      },
+    },
+  })
+
+  const trpc = createClient({
+    queryClient,
+    fetch,
+    links: [
+      loggerLink({ enabled: () => dev }),
+      httpBatchLink({
+        url: '/api/trpc',
+        fetch,
+      }),
+    ],
+  })
+
+  return { trpc }
 }
 ```
 
-Now in any component, you can query your API using the proxy exported from the utils file.
+Then provide the client to the rest of your app via context in `routes/layout.svelte`
 
-```ts
-import { proxy } from '~/utils/trpc';
+```svelte
+<script lang="ts">
+  import { QueryClientProvider } from '@tanstack/svelte-query'
+  import { setContextClient } from '$lib/trpc'
+  import type { LayoutData } from './$types'
 
-export function Hello() {
-  const { data, error, status } = proxy.greeting.useQuery({ name: 'tRPC' });
+  export let data: LayoutData
 
-  if (error) {
-    return <p>{error.message}</p>;
-  }
+  setContextClient(data.trpc)
+</script>
 
-  if (status !== 'success') {
-    return <p>Loading...</p>;
-  }
+<QueryClientProvider client={data.trpc.queryClient}>
+  <slot />
+</QueryClientProvider>
+```
 
-  return <div>{data && <p>{data.greeting}</p>}</div>;
+Now in any page or component, you can query your API using the client you created
+
+```svelte
+<script lang="ts">
+  import { getContextClient } from '$lib/trpc'
+
+  const trpc = getContextClient()
+  const query = trpc.greeting.query({ name: 'tRPC' });
+</script>
+
+{#if $query.isSuccess}
+  <p>{$query.data.greeting}</p>
+{:else if $query.isError}
+  <p>{$query.error.message}</p>
+{:else}
+  <p>Loading...</p>
+{/if}
+```
+
+## SSR
+
+You can prefetch queries on the server, which:
+
+1. Renders their data during SSR
+2. Prepopulates the client-side cache
+
+In any `page.ts` file, just call prefetchQuery
+
+```svelte
+import type { PageLoad } from './$types'
+
+export const load: PageLoad = async ({ parent }) => {
+  const { trpc } = await parent()
+  await trpc.ping.prefetchQuery()
 }
 ```
