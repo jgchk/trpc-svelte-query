@@ -47,7 +47,7 @@ import {
 	DefinedUseTRPCQueryOptions,
 	UseTRPCInfiniteQuerySuccessResult,
 	UseTRPCQuerySuccessResult,
-} from './shared/hooks/types';
+} from './shared/types';
 import { callUtilMethod } from './shared/utils';
 import { splitUserOptions } from './utils/splitUserOptions';
 
