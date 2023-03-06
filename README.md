@@ -124,7 +124,7 @@ You can prefetch queries on the server, which:
 
 In any `page.ts` file, just call prefetchQuery
 
-```svelte
+```ts
 import type { PageLoad } from './$types'
 
 export const load: PageLoad = async ({ parent }) => {
