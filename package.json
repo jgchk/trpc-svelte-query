@@ -1,0 +1,84 @@
+{
+  "name": "@jgchk/trpc-svelte-query",
+  "version": "10.14.0",
+  "description": "tRPC Svelte lib",
+  "author": "jgchk",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "dist/index.d.ts"
+      ],
+      "shared": [
+        "dist/shared/index.d.ts"
+      ]
+    }
+  },
+  "homepage": "https://trpc.io",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trpc/trpc.git",
+    "directory": "packages/svelte-query"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint --ext \".js,.ts,.tsx\" --report-unused-disable-directives src"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./shared": {
+      "import": "./dist/shared/index.mjs",
+      "require": "./dist/shared/index.js",
+      "default": "./dist/shared/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "shared"
+  ],
+  "eslintConfig": {
+    "rules": {
+      "no-restricted-imports": [
+        "error",
+        "@jgchk/trpc-svelte-query"
+      ]
+    }
+  },
+  "peerDependencies": {
+    "@tanstack/svelte-query": "^4.26.0",
+    "@trpc/client": "10.14.0",
+    "@trpc/server": "10.14.0",
+    "svelte": "^3.55.1"
+  },
+  "devDependencies": {
+    "@tanstack/svelte-query": "^4.26.0",
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
+    "@trpc/client": "^10.14.0",
+    "@trpc/server": "^10.14.0",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "eslint": "^8.30.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-unicorn": "^46.0.0",
+    "prettier": "^2.8.4",
+    "svelte": "^3.55.1",
+    "tsup": "^6.6.3",
+    "typescript": "^4.9.5"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "esm-env": "^1.0.0"
+  }
+}
