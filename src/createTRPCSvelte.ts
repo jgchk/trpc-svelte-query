@@ -181,7 +181,7 @@ export type DecorateProcedure<
 				: object)
 	: TProcedure extends AnyMutationProcedure
 	? {
-			useMutation: <TContext = unknown>(
+			mutation: <TContext = unknown>(
 				opts?: CreateTRPCMutationOptions<
 					inferProcedureInput<TProcedure>,
 					TRPCClientErrorLike<TProcedure>,
