@@ -7,6 +7,8 @@ import {
 	CreateQueryResult,
 	DefinedCreateQueryResult,
 	DehydratedState,
+	FetchInfiniteQueryOptions,
+	FetchQueryOptions,
 	InfiniteQueryObserverSuccessResult,
 	InitialDataFunction,
 	QueryObserverSuccessResult,
@@ -43,6 +45,17 @@ export interface TRPCCreateQueryBaseOptions {
 export interface CreateTRPCQueryOptions<TPath, TInput, TOutput, TData, TError>
 	extends CreateQueryOptions<TOutput, TError, TData, [TPath, TInput]>,
 		TRPCCreateQueryBaseOptions {}
+
+export interface PrefetchTRPCQueryOptions<TPath, TInput, TOutput, TData, TError>
+	extends FetchQueryOptions<TOutput, TError, TData, [TPath, TInput]> {}
+
+export interface PrefetchTRPCInfiniteQueryOptions<
+	TPath,
+	TInput,
+	TOutput,
+	TData,
+	TError,
+> extends FetchInfiniteQueryOptions<TOutput, TError, TData, [TPath, TInput]> {}
 
 /** @internal **/
 export interface DefinedUseTRPCQueryOptions<
@@ -105,34 +118,34 @@ export type CreateClient<TRouter extends AnyRouter> = (
 export type CreateTRPCQueryResult<TData, TError> = CreateQueryResult<
 	TData,
 	TError
->
+>;
 
 /**
  * @internal
  */
 export type DefinedCreateTRPCQueryResult<TData, TError> =
-	DefinedCreateQueryResult<TData, TError>
+	DefinedCreateQueryResult<TData, TError>;
 
 /**
  * @internal
  */
 export type UseTRPCQuerySuccessResult<TData, TError> =
-	QueryObserverSuccessResult<TData, TError>
+	QueryObserverSuccessResult<TData, TError>;
 
 /**
  * @internal
  */
 export type CreateTRPCInfiniteQueryResult<TData, TError> =
-	CreateInfiniteQueryResult<TData, TError>
+	CreateInfiniteQueryResult<TData, TError>;
 
 /**
  * @internal
  */
 export type UseTRPCInfiniteQuerySuccessResult<TData, TError> =
-	InfiniteQueryObserverSuccessResult<TData, TError>
+	InfiniteQueryObserverSuccessResult<TData, TError>;
 
 /**
  * @internal
  */
 export type CreateTRPCMutationResult<TData, TError, TVariables, TContext> =
-	CreateMutationResult<TData, TError, TVariables, TContext>
+	CreateMutationResult<TData, TError, TVariables, TContext>;

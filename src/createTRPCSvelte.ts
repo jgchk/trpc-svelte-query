@@ -45,6 +45,8 @@ import {
 	CreateTRPCSubscriptionOptions,
 	DefinedCreateTRPCQueryResult,
 	DefinedUseTRPCQueryOptions,
+	PrefetchTRPCInfiniteQueryOptions,
+	PrefetchTRPCQueryOptions,
 	UseTRPCInfiniteQuerySuccessResult,
 	UseTRPCQuerySuccessResult,
 } from './shared/types';
@@ -101,6 +103,44 @@ export interface ProcedureCreateQuery<
 	): CreateTRPCQueryResult<TData, TRPCClientErrorLike<TProcedure>>;
 }
 
+export interface ProcedurePrefetchQuery<
+	TProcedure extends AnyProcedure,
+	TPath extends string,
+> {
+	<
+		TQueryFnData = inferTransformedProcedureOutput<TProcedure>,
+		TData = inferTransformedProcedureOutput<TProcedure>,
+	>(
+		input: inferProcedureInput<TProcedure>,
+		opts?: PrefetchTRPCQueryOptions<
+			TPath,
+			inferProcedureInput<TProcedure>,
+			TQueryFnData,
+			TData,
+			TRPCClientErrorLike<TProcedure>
+		>,
+	): Promise<void>;
+}
+
+export interface ProcedurePrefetchInfiniteQuery<
+	TProcedure extends AnyProcedure,
+	TPath extends string,
+> {
+	<
+		TQueryFnData = inferTransformedProcedureOutput<TProcedure>,
+		TData = inferTransformedProcedureOutput<TProcedure>,
+	>(
+		input: inferProcedureInput<TProcedure>,
+		opts?: PrefetchTRPCInfiniteQueryOptions<
+			TPath,
+			inferProcedureInput<TProcedure>,
+			TQueryFnData,
+			TData,
+			TRPCClientErrorLike<TProcedure>
+		>,
+	): Promise<void>;
+}
+
 /**
  * @internal
  */
@@ -111,7 +151,7 @@ export type DecorateProcedure<
 > = TProcedure extends AnyQueryProcedure
 	? {
 			query: ProcedureCreateQuery<TProcedure, TPath>;
-			prefetchQuery(): Promise<void>;
+			prefetchQuery: ProcedurePrefetchQuery<TProcedure, TPath>;
 	  } & (inferProcedureInput<TProcedure> extends { cursor?: any }
 			? {
 					useInfiniteQuery: <
