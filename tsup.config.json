@@ -1,0 +1,5 @@
+{
+	"entry": ["src/index.ts", "src/shared/index.ts"],
+	"dts": true,
+	"format": ["esm", "cjs"]
+}

@@ -1,6 +1,6 @@
 {
   "name": "@jgchk/trpc-svelte-query",
-  "version": "10.14.0",
+  "version": "1.0.0",
   "description": "tRPC Svelte lib",
   "author": "jgchk",
   "license": "MIT",
