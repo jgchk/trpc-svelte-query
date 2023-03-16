@@ -1,6 +1,6 @@
 {
   "name": "@jgchk/trpc-svelte-query",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "tRPC Svelte lib",
   "author": "jgchk",
   "license": "MIT",
@@ -55,15 +55,15 @@
   },
   "peerDependencies": {
     "@tanstack/svelte-query": "^4.26.0",
-    "@trpc/client": "10.14.0",
-    "@trpc/server": "10.14.0",
+    "@trpc/client": "10.16.0",
+    "@trpc/server": "10.16.0",
     "svelte": "^3.55.1"
   },
   "devDependencies": {
     "@tanstack/svelte-query": "^4.26.0",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
-    "@trpc/client": "^10.14.0",
-    "@trpc/server": "^10.14.0",
+    "@trpc/client": "^10.16.0",
+    "@trpc/server": "^10.16.0",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "@typescript-eslint/parser": "^5.54.0",
     "eslint": "^8.30.0",

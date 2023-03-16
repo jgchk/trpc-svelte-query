@@ -3,8 +3,8 @@ lockfileVersion: 5.4
 specifiers:
   '@tanstack/svelte-query': ^4.26.0
   '@trivago/prettier-plugin-sort-imports': ^4.1.1
-  '@trpc/client': ^10.14.0
-  '@trpc/server': ^10.14.0
+  '@trpc/client': ^10.16.0
+  '@trpc/server': ^10.16.0
   '@typescript-eslint/eslint-plugin': ^5.54.0
   '@typescript-eslint/parser': ^5.54.0
   eslint: ^8.30.0
@@ -23,8 +23,8 @@ dependencies:
 devDependencies:
   '@tanstack/svelte-query': 4.26.0_svelte@3.55.1
   '@trivago/prettier-plugin-sort-imports': 4.1.1_prettier@2.8.4
-  '@trpc/client': 10.14.0_@trpc+server@10.14.0
-  '@trpc/server': 10.14.0
+  '@trpc/client': 10.16.0_@trpc+server@10.16.0
+  '@trpc/server': 10.16.0
   '@typescript-eslint/eslint-plugin': 5.54.0_6mj2wypvdnknez7kws2nfdgupi
   '@typescript-eslint/parser': 5.54.0_ycpbpc6yetojsgtrx3mwntkhsu
   eslint: 8.35.0
@@ -456,16 +456,16 @@ packages:
       - supports-color
     dev: true
 
-  /@trpc/client/10.14.0_@trpc+server@10.14.0:
-    resolution: {integrity: sha512-fi7i+Av3ARGyWwlbuGD+ZeqF5HxomGG8hBB89dWHAc4WlBnDV6g0GQQgDaMKZqXbGt0sYeJucym6WPI6kO7HCQ==}
+  /@trpc/client/10.16.0_@trpc+server@10.16.0:
+    resolution: {integrity: sha512-Hxxi3mOcUyszosj6xpPDIIBV1TOhXKpZ191BW/60r1lXBAfNrDUWHOTol1Dfu+hpcx4bpj3WRyob5cf+6KeCDA==}
     peerDependencies:
-      '@trpc/server': 10.14.0
+      '@trpc/server': 10.16.0
     dependencies:
-      '@trpc/server': 10.14.0
+      '@trpc/server': 10.16.0
     dev: true
 
-  /@trpc/server/10.14.0:
-    resolution: {integrity: sha512-hNnvwkSfqpIb89CH8pTV8VkldS9qjd3ZxaCgya7CeCk6QeDajT/bRX9bPmrkEe0UQtrbbPU5h47nuMrBsN2ghQ==}
+  /@trpc/server/10.16.0:
+    resolution: {integrity: sha512-lCUq7AB7vcgrNbaN+xP/AN62OjKDgrRyG7fTDPv5K633ut7KJ3m57qs60VRBOgp9vow6elAg51pKFFDtPHbTRA==}
     dev: true
 
   /@types/json-schema/7.0.11:
