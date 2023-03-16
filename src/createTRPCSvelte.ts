@@ -30,6 +30,7 @@ import {
 	inferTransformedSubscriptionOutput,
 } from '@trpc/server/shared';
 import { BROWSER } from 'esm-env';
+import { Readable, writable } from 'svelte/store';
 import { getArrayQueryKey } from './internals/getArrayQueryKey';
 import {
 	getContextClient as __getContextClient,
@@ -42,7 +43,6 @@ import {
 	CreateTRPCMutationResult,
 	CreateTRPCQueryOptions,
 	CreateTRPCQueryResult,
-	CreateTRPCSubscriptionOptions,
 	DefinedCreateTRPCQueryResult,
 	DefinedUseTRPCQueryOptions,
 	PrefetchTRPCInfiniteQueryOptions,
@@ -237,13 +237,17 @@ export type DecorateProcedure<
 	  }
 	: TProcedure extends AnySubscriptionProcedure
 	? {
-			useSubscription: (
+			subscription: (
 				input: inferProcedureInput<TProcedure>,
-				opts?: CreateTRPCSubscriptionOptions<
-					inferTransformedSubscriptionOutput<TProcedure>,
-					TRPCClientErrorLike<TProcedure>
-				>,
-			) => void;
+				opts?: { enabled?: boolean },
+			) => {
+				state: Readable<'idle' | 'running' | 'stopped'>;
+				data: Readable<
+					inferTransformedSubscriptionOutput<TProcedure> | undefined
+				>;
+				error: Readable<TRPCClientErrorLike<TProcedure> | undefined>;
+				unsubscribe: () => void;
+			};
 	  }
 	: never;
 
@@ -287,6 +291,7 @@ const clientMethods = {
 	infiniteQuery: [1, 'infinite'],
 	prefetchQuery: [1, 'query'],
 	prefetchInfiniteQuery: [1, 'infinite'],
+	subscription: [1, 'query'],
 } as const;
 
 type ClientMethod = keyof typeof clientMethods;
@@ -345,7 +350,7 @@ export function createHooksInternalProxy<
 				queryType,
 			) as QueryKey;
 
-			const enabled = tanstackQueryOptions?.enabled !== false && BROWSER;
+			const enabled = tanstackQueryOptions?.enabled !== false;
 
 			switch (method) {
 				case 'query':
@@ -363,6 +368,47 @@ export function createHooksInternalProxy<
 							client.mutation(joinedPath, variables, trpcOptions),
 					});
 				}
+				case 'subscription': {
+					const state = writable<'idle' | 'running' | 'stopped'>('idle');
+					const data = writable<unknown | undefined>(undefined);
+					const error = writable<TRPCClientErrorLike<AnyRouter> | undefined>(
+						undefined,
+					);
+
+					const enabled = (args[0]?.enabled ?? true) && BROWSER;
+					if (!enabled) {
+						return {
+							state,
+							data,
+							error,
+							unsubscribe: () => void 0,
+						};
+					}
+
+					const subscription = client.subscription(joinedPath, args[0], {
+						onStarted: () => {
+							state.set('running');
+						},
+						onData: (data_) => {
+							data.set(data_);
+						},
+						onError: (error_) => {
+							error.set(error_);
+						},
+					});
+
+					const unsubscribe = () => {
+						state.set('stopped');
+						subscription.unsubscribe();
+					};
+
+					return {
+						state,
+						data,
+						error,
+						unsubscribe,
+					};
+				}
 				case 'infiniteQuery':
 					return createInfiniteQuery({
 						...tanstackQueryOptions,
@@ -377,10 +423,7 @@ export function createHooksInternalProxy<
 					return queryClient.prefetchQuery({
 						...tanstackQueryOptions,
 						queryKey: key,
-						queryFn: (context) => {
-							const input = { ...args[0], cursor: context.pageParam };
-							return client.query(joinedPath, input, trpcOptions);
-						},
+						queryFn: () => client.query(joinedPath, args[0], trpcOptions),
 					});
 				}
 				case 'prefetchInfiniteQuery': {
