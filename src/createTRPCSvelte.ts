@@ -375,7 +375,7 @@ export function createHooksInternalProxy<
 						undefined,
 					);
 
-					const enabled = (args[0]?.enabled ?? true) && BROWSER;
+					const enabled = (options?.enabled ?? true) && BROWSER;
 					if (!enabled) {
 						return {
 							state,
