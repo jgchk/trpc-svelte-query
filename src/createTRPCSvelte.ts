@@ -45,6 +45,8 @@ import {
 	CreateTRPCQueryResult,
 	DefinedCreateTRPCQueryResult,
 	DefinedUseTRPCQueryOptions,
+	FetchTRPCInfiniteQueryOptions,
+	FetchTRPCQueryOptions,
 	PrefetchTRPCInfiniteQueryOptions,
 	PrefetchTRPCQueryOptions,
 	UseTRPCInfiniteQuerySuccessResult,
@@ -103,6 +105,25 @@ export interface ProcedureCreateQuery<
 	): CreateTRPCQueryResult<TData, TRPCClientErrorLike<TProcedure>>;
 }
 
+export interface ProcedureFetchQuery<
+	TProcedure extends AnyProcedure,
+	TPath extends string,
+> {
+	<
+		TQueryFnData = inferTransformedProcedureOutput<TProcedure>,
+		TData = inferTransformedProcedureOutput<TProcedure>,
+	>(
+		input: inferProcedureInput<TProcedure>,
+		opts?: FetchTRPCQueryOptions<
+			TPath,
+			inferProcedureInput<TProcedure>,
+			TQueryFnData,
+			TData,
+			TRPCClientErrorLike<TProcedure>
+		>,
+	): Promise<TData>;
+}
+
 export interface ProcedurePrefetchQuery<
 	TProcedure extends AnyProcedure,
 	TPath extends string,
@@ -120,6 +141,25 @@ export interface ProcedurePrefetchQuery<
 			TRPCClientErrorLike<TProcedure>
 		>,
 	): Promise<void>;
+}
+
+export interface ProcedureFetchInfiniteQuery<
+	TProcedure extends AnyProcedure,
+	TPath extends string,
+> {
+	<
+		TQueryFnData = inferTransformedProcedureOutput<TProcedure>,
+		TData = inferTransformedProcedureOutput<TProcedure>,
+	>(
+		input: inferProcedureInput<TProcedure>,
+		opts?: FetchTRPCInfiniteQueryOptions<
+			TPath,
+			inferProcedureInput<TProcedure>,
+			TQueryFnData,
+			TData,
+			TRPCClientErrorLike<TProcedure>
+		>,
+	): Promise<InfiniteData<TData>>;
 }
 
 export interface ProcedurePrefetchInfiniteQuery<
@@ -151,6 +191,7 @@ export type DecorateProcedure<
 > = TProcedure extends AnyQueryProcedure
 	? {
 			query: ProcedureCreateQuery<TProcedure, TPath>;
+			fetchQuery: ProcedureFetchQuery<TProcedure, TPath>;
 			prefetchQuery: ProcedurePrefetchQuery<TProcedure, TPath>;
 	  } & (inferProcedureInput<TProcedure> extends { cursor?: any }
 			? {
@@ -169,7 +210,11 @@ export type DecorateProcedure<
 						TData,
 						TRPCClientErrorLike<TProcedure>
 					>;
-					prefetchInfiniteQuery(): Promise<void>;
+					fetchInfiniteQuery: ProcedureFetchInfiniteQuery<TProcedure, TPath>;
+					prefetchInfiniteQuery: ProcedurePrefetchInfiniteQuery<
+						TProcedure,
+						TPath
+					>;
 			  } & (TFlags extends 'ExperimentalSuspense'
 					? {
 							useSuspenseInfiniteQuery: <
@@ -289,7 +334,9 @@ const clientMethods = {
 	query: [1, 'query'],
 	mutation: [0, 'any'],
 	infiniteQuery: [1, 'infinite'],
+	fetchQuery: [1, 'query'],
 	prefetchQuery: [1, 'query'],
+	fetchInfiniteQuery: [1, 'infinite'],
 	prefetchInfiniteQuery: [1, 'infinite'],
 	subscription: [1, 'query'],
 } as const;
@@ -419,11 +466,28 @@ export function createHooksInternalProxy<
 							return client.query(joinedPath, input, trpcOptions);
 						},
 					});
+				case 'fetchQuery': {
+					return queryClient.fetchQuery({
+						...tanstackQueryOptions,
+						queryKey: key,
+						queryFn: () => client.query(joinedPath, args[0], trpcOptions),
+					});
+				}
 				case 'prefetchQuery': {
 					return queryClient.prefetchQuery({
 						...tanstackQueryOptions,
 						queryKey: key,
 						queryFn: () => client.query(joinedPath, args[0], trpcOptions),
+					});
+				}
+				case 'fetchInfiniteQuery': {
+					return queryClient.fetchInfiniteQuery({
+						...tanstackQueryOptions,
+						queryKey: key,
+						queryFn: (context) => {
+							const input = { ...args[0], cursor: context.pageParam };
+							return client.query(joinedPath, input, trpcOptions);
+						},
 					});
 				}
 				case 'prefetchInfiniteQuery': {

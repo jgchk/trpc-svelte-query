@@ -46,8 +46,19 @@ export interface CreateTRPCQueryOptions<TPath, TInput, TOutput, TData, TError>
 	extends CreateQueryOptions<TOutput, TError, TData, [TPath, TInput]>,
 		TRPCCreateQueryBaseOptions {}
 
+export interface FetchTRPCQueryOptions<TPath, TInput, TOutput, TData, TError>
+	extends FetchQueryOptions<TOutput, TError, TData, [TPath, TInput]> {}
+
 export interface PrefetchTRPCQueryOptions<TPath, TInput, TOutput, TData, TError>
 	extends FetchQueryOptions<TOutput, TError, TData, [TPath, TInput]> {}
+
+export interface FetchTRPCInfiniteQueryOptions<
+	TPath,
+	TInput,
+	TOutput,
+	TData,
+	TError,
+> extends FetchInfiniteQueryOptions<TOutput, TError, TData, [TPath, TInput]> {}
 
 export interface PrefetchTRPCInfiniteQueryOptions<
 	TPath,

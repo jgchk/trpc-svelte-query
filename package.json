@@ -1,6 +1,6 @@
 {
   "name": "@jgchk/trpc-svelte-query",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "tRPC Svelte lib",
   "author": "jgchk",
   "license": "MIT",
@@ -23,7 +23,7 @@
     "directory": "packages/svelte-query"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "rm -r dist || true && tsup",
     "dev": "tsup --watch",
     "lint": "eslint --ext \".js,.ts,.tsx\" --report-unused-disable-directives src"
   },
