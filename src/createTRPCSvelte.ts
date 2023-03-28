@@ -279,6 +279,9 @@ export type DecorateProcedure<
 				inferProcedureInput<TProcedure>,
 				TContext
 			>;
+			mutate: (
+				input: inferProcedureInput<TProcedure>,
+			) => Promise<inferTransformedProcedureOutput<TProcedure>>;
 	  }
 	: TProcedure extends AnySubscriptionProcedure
 	? {
@@ -334,6 +337,7 @@ const clientMethods = {
 	query: [1, 'query'],
 	mutation: [0, 'any'],
 	infiniteQuery: [1, 'infinite'],
+	mutate: [0, 'any'],
 	fetchQuery: [1, 'query'],
 	prefetchQuery: [1, 'query'],
 	fetchInfiniteQuery: [1, 'infinite'],
@@ -466,6 +470,9 @@ export function createHooksInternalProxy<
 							return client.query(joinedPath, input, trpcOptions);
 						},
 					});
+				case 'mutate': {
+					return client.mutation(joinedPath, args[0], trpcOptions);
+				}
 				case 'fetchQuery': {
 					return queryClient.fetchQuery({
 						...tanstackQueryOptions,
