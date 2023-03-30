@@ -44,7 +44,7 @@ import type { AppRouter } from '../server/routers/_app'
 export const { createClient, setContextClient, getContextClient } = createTRPCSvelte<AppRouter>()
 ```
 
-Set up a tRPC client in `routes/layout.ts`
+Set up a tRPC client in `routes/+layout.ts`
 
 ```ts
 import { browser, dev } from '$app/environment'
@@ -78,7 +78,7 @@ export const load: LayoutLoad = async ({ fetch }) => {
 }
 ```
 
-Then provide the client to the rest of your app via context in `routes/layout.svelte`
+Then provide the client to the rest of your app via context in `routes/+layout.svelte`
 
 ```svelte
 <script lang="ts">
@@ -122,7 +122,7 @@ You can prefetch queries on the server, which:
 1. Renders their data during SSR
 2. Prepopulates the client-side cache
 
-In any `page.ts` file, just call prefetchQuery
+In any `+page.ts` file, just call prefetchQuery
 
 ```ts
 import type { PageLoad } from './$types'
