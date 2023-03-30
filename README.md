@@ -16,10 +16,6 @@
 
 > A tRPC wrapper around svelte-query.
 
-## Documentation
-
-Full documentation for `@jgchk/trpc-svelte-query` can be found [here](https://trpc.io/docs/svelte-query)
-
 ## Installation
 
 ```bash
