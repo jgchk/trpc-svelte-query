@@ -4,3 +4,4 @@ export type {
 } from '../createTRPCSvelte';
 export * from './types';
 export * from '../internals/context';
+export * from './utils';

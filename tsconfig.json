@@ -1,14 +1,9 @@
 {
 	"compilerOptions": {
 		"module": "esnext",
-		"lib": [
-			"esnext",
-			"dom",
-			"dom.iterable"
-		],
+		"lib": ["esnext", "dom", "dom.iterable"],
 		"target": "es2020",
 		"declaration": true,
-		"emitDeclarationOnly": true,
 		"declarationMap": true,
 		"outDir": "./dist",
 		"strict": true,
@@ -21,7 +16,5 @@
 		"jsx": "react",
 		"esModuleInterop": true
 	},
-	"include": [
-		"src"
-	]
+	"include": ["src"]
 }

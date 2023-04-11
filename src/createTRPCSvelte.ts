@@ -37,6 +37,11 @@ import {
 	setContextClient as __setContextClient,
 } from './shared';
 import {
+	DecorateProcedureUtils,
+	DecorateRouterUtils,
+	callUtilMethod,
+} from './shared';
+import {
 	CreateTRPCInfiniteQueryOptions,
 	CreateTRPCInfiniteQueryResult,
 	CreateTRPCMutationOptions,
@@ -52,7 +57,6 @@ import {
 	UseTRPCInfiniteQuerySuccessResult,
 	UseTRPCQuerySuccessResult,
 } from './shared/types';
-import { callUtilMethod } from './shared/utils';
 import { splitUserOptions } from './utils/splitUserOptions';
 
 /**
@@ -314,9 +318,10 @@ export type DecoratedProcedureRecord<
 				`${TPath}${TKey & string}.`
 		  >
 		: TProcedures[TKey] extends AnyProcedure
-		? DecorateProcedure<TProcedures[TKey], TFlags, `${TPath}${TKey & string}`>
+		? DecorateProcedure<TProcedures[TKey], TFlags, `${TPath}${TKey & string}`> &
+				DecorateProcedureUtils<TProcedures[TKey]>
 		: never;
-};
+} & DecorateRouterUtils;
 
 /**
  * @internal
