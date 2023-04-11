@@ -199,7 +199,7 @@ export type DecorateProcedure<
 			prefetchQuery: ProcedurePrefetchQuery<TProcedure, TPath>;
 	  } & (inferProcedureInput<TProcedure> extends { cursor?: any }
 			? {
-					useInfiniteQuery: <
+					infiniteQuery: <
 						_TQueryFnData = inferTransformedProcedureOutput<TProcedure>,
 						TData = inferTransformedProcedureOutput<TProcedure>,
 					>(
