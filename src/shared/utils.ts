@@ -119,8 +119,10 @@ export type DecorateProcedureUtils<TProcedure extends AnyProcedure> =
 							setInfiniteData(
 								input: inferProcedureInput<TProcedure>,
 								updater: Updater<
-									inferTransformedProcedureOutput<TProcedure> | undefined,
-									inferTransformedProcedureOutput<TProcedure> | undefined
+									| InfiniteData<inferTransformedProcedureOutput<TProcedure>>
+									| undefined,
+									| InfiniteData<inferTransformedProcedureOutput<TProcedure>>
+									| undefined
 								>,
 								options?: SetDataOptions,
 							): inferTransformedProcedureOutput<TProcedure> | undefined;
