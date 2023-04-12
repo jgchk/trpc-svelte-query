@@ -39,7 +39,7 @@ export type DecorateProcedureUtils<TProcedure extends AnyProcedure> =
 		? {
 				utils: {
 					invalidate: <TPageData = unknown>(
-						input: inferProcedureInput<TProcedure>,
+						input?: inferProcedureInput<TProcedure>,
 						filters?: InvalidateQueryFilters<TPageData>,
 						options?: InvalidateOptions,
 					) => Promise<void>;
