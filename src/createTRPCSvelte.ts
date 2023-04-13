@@ -48,8 +48,6 @@ import {
 	CreateTRPCMutationResult,
 	CreateTRPCQueryOptions,
 	CreateTRPCQueryResult,
-	DefinedCreateTRPCQueryResult,
-	DefinedUseTRPCQueryOptions,
 	FetchTRPCInfiniteQueryOptions,
 	FetchTRPCQueryOptions,
 	PrefetchTRPCInfiniteQueryOptions,
@@ -80,20 +78,6 @@ export interface ProcedureCreateQuery<
 	TProcedure extends AnyProcedure,
 	TPath extends string,
 > {
-	<
-		TQueryFnData = inferTransformedProcedureOutput<TProcedure>,
-		TData = inferTransformedProcedureOutput<TProcedure>,
-	>(
-		input: inferProcedureInput<TProcedure>,
-		opts: DefinedUseTRPCQueryOptions<
-			TPath,
-			inferProcedureInput<TProcedure>,
-			TQueryFnData,
-			TData,
-			TRPCClientErrorLike<TProcedure>
-		>,
-	): DefinedCreateTRPCQueryResult<TData, TRPCClientErrorLike<TProcedure>>;
-
 	<
 		TQueryFnData = inferTransformedProcedureOutput<TProcedure>,
 		TData = inferTransformedProcedureOutput<TProcedure>,

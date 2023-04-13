@@ -10,7 +10,6 @@ import {
 	FetchInfiniteQueryOptions,
 	FetchQueryOptions,
 	InfiniteQueryObserverSuccessResult,
-	InitialDataFunction,
 	QueryObserverSuccessResult,
 	QueryOptions,
 } from '@tanstack/svelte-query';
@@ -67,17 +66,6 @@ export interface PrefetchTRPCInfiniteQueryOptions<
 	TData,
 	TError,
 > extends FetchInfiniteQueryOptions<TOutput, TError, TData, [TPath, TInput]> {}
-
-/** @internal **/
-export interface DefinedUseTRPCQueryOptions<
-	TPath,
-	TInput,
-	TOutput,
-	TData,
-	TError,
-> extends CreateTRPCQueryOptions<TPath, TInput, TOutput, TData, TError> {
-	initialData: TOutput | InitialDataFunction<TOutput>;
-}
 
 export interface TRPCQueryOptions<TPath, TInput, TData, TError>
 	extends QueryOptions<TData, TError, TData, [TPath, TInput]>,
